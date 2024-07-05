@@ -11,6 +11,7 @@ from fastapi.openapi.docs import (
 
 from core.db.db_helper import db_helper
 from core.settings import settings
+from api import router
 
 
 @asynccontextmanager
@@ -62,6 +63,8 @@ def create_app(
 main_app = create_app(
     create_custom_static_urls=True,
 )
+
+main_app.include_router(router)
 
 
 if __name__ == "__main__":
