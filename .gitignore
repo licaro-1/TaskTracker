@@ -163,3 +163,5 @@ cython_debug/
 *.idea/
 .certs/
 /src/certs/
+
+./statis/user_images/*
