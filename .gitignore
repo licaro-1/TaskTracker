@@ -164,4 +164,7 @@ cython_debug/
 .certs/
 /src/certs/
 
-./statis/user_images/*
+backend/authentication/certs/*
+backend/static/user_images/*
+!backend/static/user_images/default_image.png
+backend/logs/log_backup/*

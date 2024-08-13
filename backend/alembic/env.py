@@ -9,6 +9,7 @@ from alembic import context
 
 from core.db.base import Base
 from users.models import User # noqa
+from tasks.models import (Task, TaskStatus, UserTask, TaskComment)
 from core.settings import settings
 
 # this is the Alembic Config object, which provides

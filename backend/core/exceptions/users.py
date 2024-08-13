@@ -39,9 +39,12 @@ class InvalidLoginDataError(BaseException):
 
 
 class UnauthorizedError(BaseException):
-    def __init__(self):
+    def __init__(self, message: str = None):
         self.status_code = status.HTTP_401_UNAUTHORIZED
-        self.detail = "Unauthorized"
+        if message:
+            self.detail = message
+        else:
+            self.detail = "Unauthorized"
 
 
 class InvalidTokenError(BaseException):

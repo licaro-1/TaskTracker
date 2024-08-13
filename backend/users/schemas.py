@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, EmailStr
 
 
 class UserBase(BaseModel):
@@ -15,7 +15,6 @@ class UserRead(UserBase):
     full_name: str
     avatar: Optional[str] = None
     about: Optional[str] = None
-    model_config = ConfigDict(from_attributes=True)
 
 
 class UserProfileRead(UserRead):
@@ -23,6 +22,7 @@ class UserProfileRead(UserRead):
     email: EmailStr
     created_at: datetime
     updated_at: datetime
+    is_active: bool
 
 
 class UserCreate(UserBase):

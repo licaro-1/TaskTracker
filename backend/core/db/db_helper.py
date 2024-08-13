@@ -1,13 +1,19 @@
+import sys
 from typing import AsyncGenerator
+from sqlalchemy.pool import NullPool
 
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
-    AsyncEngine
+    AsyncEngine,
 )
 
 from core.settings import settings
+
+
+def is_pytest_environment():
+    return "pytest" in sys.modules.keys()
 
 
 class DatabaseHelper:
@@ -18,12 +24,16 @@ class DatabaseHelper:
         pool_size: int = 50,
         max_overflow: int = 10,
     ):
-        self.engine: AsyncEngine = create_async_engine(
-            url=url,
-            echo=echo,
-            pool_size=pool_size,
-            max_overflow=max_overflow,
-        )
+        if is_pytest_environment():
+            self.engine: AsyncEngine = create_async_engine(url=url, poolclass=NullPool)
+        else:
+            self.engine: AsyncEngine = create_async_engine(
+                url=url,
+                echo=echo,
+                pool_size=pool_size,
+                max_overflow=max_overflow,
+            )
+
         self.session_factory: async_sessionmaker = async_sessionmaker(
             bind=self.engine,
             autoflush=False,
@@ -39,9 +49,20 @@ class DatabaseHelper:
             yield session
 
 
-db_helper = DatabaseHelper(
-    url=str(settings.db.url),
-    echo=settings.db.echo,
-    pool_size=settings.db.pool_size,
-    max_overflow=settings.db.max_overflow,
-)
+def get_db_helper() -> DatabaseHelper:
+    """return pytest database if code running from pytest module"""
+    if is_pytest_environment():
+        db_help = DatabaseHelper(
+            url=str(settings.pytest_db.url),
+        )
+    else:
+        db_help = DatabaseHelper(
+            url=str(settings.db.url),
+            echo=settings.db.echo,
+            pool_size=settings.db.pool_size,
+            max_overflow=settings.db.max_overflow,
+        )
+    return db_help
+
+
+db_helper = get_db_helper()

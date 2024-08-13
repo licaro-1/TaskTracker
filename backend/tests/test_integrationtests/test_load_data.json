@@ -1,0 +1,67 @@
+{
+  "users": [
+          {
+            "username": "superuser",
+            "first_name": "Admin",
+            "last_name": "Admin",
+            "email": "admin@example.com",
+            "password": "12345678",
+            "is_superuser": true
+          },
+          {
+              "username": "user1",
+              "first_name": "first_name1",
+              "last_name": "last_name1",
+              "email": "user1@example.com",
+              "password": "12345678"
+          },
+          {
+              "username": "user2",
+              "first_name": "first_name2",
+              "last_name": "first_name2",
+              "email": "user2@example.com",
+              "password": "12345678"
+          },
+          {
+              "username": "user3",
+              "first_name": "first_name3",
+              "last_name": "last_name3",
+              "email": "user3@example.com",
+              "password": "12345678"
+          }
+  ],
+  "task_statuses": [
+          {
+            "name": "Открыт",
+            "slug": "open"
+          },
+          {
+            "name": "Закрыт",
+            "slug": "close"
+          },
+          {
+            "name": "В ожидании",
+            "slug": "waiting"
+          },
+          {
+            "name": "Приостановлен",
+            "slug": "Suspended"
+          }
+  ],
+  "tasks": [
+          {
+            "author_id": 2,
+            "title": "User1 Task Title",
+            "description": "User1 Task Description",
+            "status_id": 1,
+            "marked_users": ["user2"]
+          },
+          {
+            "author_id": 3,
+            "title": "User2 Task Title",
+            "description": "User2 Task Description",
+            "status_id": 1,
+            "marked_users": ["user3"]
+          }
+  ]
+}

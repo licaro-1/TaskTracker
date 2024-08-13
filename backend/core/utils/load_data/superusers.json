@@ -1,0 +1,10 @@
+[
+    {
+        "username": "superuser",
+        "first_name": "superuser",
+        "last_name": "superuser",
+        "email": "superuser@example.com",
+        "password": "12345678",
+        "is_superuser": true
+    }
+]

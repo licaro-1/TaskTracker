@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 import uvicorn
+
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from fastapi.openapi.docs import (
@@ -10,7 +11,7 @@ from fastapi.openapi.docs import (
 )
 
 from core.db.db_helper import db_helper
-from core.settings import settings
+from core.settings import settings, BASE_DIR
 from api import router
 
 

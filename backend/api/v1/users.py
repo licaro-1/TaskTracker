@@ -1,13 +1,12 @@
 from typing import Annotated
 
-from fastapi import APIRouter, status, Response, Depends, UploadFile
+from fastapi import APIRouter, status, Depends, UploadFile
 
 from api.dependencies.pagination import get_pagination_params
 from api.dependencies.users import users_service
-from core.authentication.auth import get_current_user
+from authentication.auth import get_current_user
 from users.schemas import (
     UserRead,
-    UserCreate,
     UserUpdate,
     UserProfileRead,
 )

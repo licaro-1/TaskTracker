@@ -1,6 +1,8 @@
 from typing import Optional
 
 from sqlalchemy import insert, update, delete, select, Result, func
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.pagination.utils import format_to_pagination_scheme
 from .base import AbstractRepository
 from core.db.db_helper import db_helper

@@ -1,6 +1,8 @@
-from typing import Optional, Any, Sequence, List
+from typing import Optional, Any, Sequence, List, TypeVar, Generic
 
 from pydantic import BaseModel
+
+TypeResp = TypeVar("TypeResp", bound=BaseModel)
 
 
 class PaginationParams(BaseModel):

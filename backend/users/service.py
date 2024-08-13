@@ -1,13 +1,13 @@
 import os
 from uuid import uuid4
+from typing import Type, Optional
 
-from typing import Type
+from fastapi import UploadFile
+from logs.get_logger import logger
 
-from fastapi import Response, UploadFile
-
-from core.authentication.schemas import UserLogin, JWTTokenInfo
-from core.settings import settings, STATIC_USER_IMAGES_ROOT
-from users.models import User
+from authentication.schemas import UserLogin, JWTTokenInfo
+from core.settings import STATIC_USER_IMAGES_ROOT
+from users.models import User, DEFAULT_USER_AVATAR
 from users.schemas import (
     UserRead,
     UserCreate,
@@ -18,9 +18,12 @@ from core.exceptions import users as users_exc
 from core.pagination.schemas import PaginationParams, PageResponse
 from core.pagination.utils import format_to_pagination_scheme
 from core.exceptions import users as user_exc
-from core.authentication.password_validator import validate_create_password
-from core.authentication.utils import hash_password, validate_password, encode_jwt
-
+from authentication.validation.password_validator import validate_create_password
+from authentication.utils import (
+    validate_password,
+    create_access_token,
+    create_refresh_token,
+)
 from repositories.base import AbstractRepository
 
 
@@ -29,32 +32,34 @@ class UserService:
         self.users_repository = users_repository()
 
     async def create_user(self, user_data: UserCreate):
+        logger.debug(f"Start creating user, data: {user_data}")
         if await self.users_repository.get_one(email=user_data.email):
+            logger.info(f"Create error, email: {user_data.email} already registered")
             raise user_exc.EmailAlreadyRegisteredError
         if await self.users_repository.get_one(username=user_data.username):
+            logger.info(
+                f"Create error, username: {user_data.username} already registered"
+            )
             raise user_exc.UsernameAlreadyRegisteredError
         await validate_create_password(user_data.password)
-        hashed_password = await hash_password(user_data.password)
         data = user_data.model_dump()
-        data.pop("password")
-        data["hashed_password"] = hashed_password
         user = await self.users_repository.create_one(data)
+        logger.info("User was created successfully")
         return UserRead.model_validate(user, from_attributes=True)
 
     async def get_users(
-        self,
-        pagination_params: PaginationParams,
-        order: str = "created_at"
+        self, pagination_params: PaginationParams, order: str = "created_at"
     ) -> PageResponse:
         page, limit = pagination_params.page, pagination_params.limit
         offset = (page - 1) * limit
         res = await self.users_repository.get_multi(
-            limit=limit,
-            offset=offset,
-            order=order
+            limit=limit, offset=offset, order=order
         )
         return format_to_pagination_scheme(
-            results=[UserRead.model_validate(user, from_attributes=True) for user in res["results"]],
+            results=[
+                UserRead.model_validate(user, from_attributes=True)
+                for user in res["results"]
+            ],
             pages_count=res["pages_count"],
             page=page,
             limit=limit,
@@ -70,40 +75,67 @@ class UserService:
             raise user_exc.UserNotFoundError
         return UserRead.model_validate(user, from_attributes=True)
 
+    async def get_user_by_id(self, id: int) -> Optional[User]:
+        user = await self.users_repository.get_one(id=id)
+        return user
+
     async def update_user(self, user_id: int, data: UserUpdate) -> UserRead:
+        logger.debug(f"Start update user({user_id!r}) with data: {data}")
         if data.email and await self.users_repository.get_one(email=data.email):
+            logger.info(
+                f"User({user_id!r}) update error, email: {data.email} already registered"
+            )
             raise users_exc.EmailAlreadyRegisteredError
-        if data.username and await self.users_repository.get_one(username=data.username):
+        if data.username and await self.users_repository.get_one(
+            username=data.username
+        ):
+            logger.info(
+                f"User update error, username: {data.username!r} already registered"
+            )
             raise user_exc.UsernameAlreadyRegisteredError
         data_to_upd = data.model_dump(exclude_unset=True)
         upd_user = await self.users_repository.update_one(id=user_id, data=data_to_upd)
+        logger.info(f"Success update user({user_id!r})")
         return UserRead.model_validate(upd_user, from_attributes=True)
 
     async def login(self, login_data: UserLogin) -> JWTTokenInfo:
+        logger.debug(f"Start login user with data: {login_data}")
         user = await self.users_repository.get_one(email=login_data.email)
         if not user:
+            logger.info(f"Login error, user with email: {login_data.email} not found")
             raise user_exc.InvalidLoginDataError
         if not await validate_password(
-                login_data.password,
-                hashed_password=user.hashed_password):
+            login_data.password, hashed_password=user.hashed_password
+        ):
+            logger.info(f"Login error, user entered an incorrect password")
             raise user_exc.InvalidLoginDataError
-        jwt_payload = {"sub": user.id, "username": user.username}
-        token = await encode_jwt(jwt_payload)
+        access_token = await create_access_token(user)
+        refresh_token = await create_refresh_token(user)
         return JWTTokenInfo(
-            access_token=token,
-            token_type=settings.auth.token_type
+            access_token=access_token,
+            refresh_token=refresh_token,
         )
 
-    async def logout(self, response: Response):
-        return response.delete_cookie(settings.auth.cookie_session_key)
+    async def refresh_token(self, user: User) -> JWTTokenInfo:
+        logger.info(f"Refreshing token for user({user.id})")
+        access_token = await create_access_token(user)
+        logger.info(f"New access token for user({user.id}) - {access_token}")
+        return JWTTokenInfo(
+            access_token=access_token,
+        )
 
     async def update_avatar(self, user: User, image: UploadFile) -> UserRead:
-        if user.avatar:
+        logger.debug(f"Start update user({user.id}) avatar")
+        if user.avatar != DEFAULT_USER_AVATAR:
             # removing user avatar from statis file
+            logger.info(f"remove user avatar {user.avatar}")
             os.remove(STATIC_USER_IMAGES_ROOT + user.avatar)
         file_name = str(uuid4()) + image.filename[-6:]
         file_path = STATIC_USER_IMAGES_ROOT + file_name
         with open(file_path, "wb") as f:
             f.write(image.file.read())
-        res = await self.users_repository.update_one(id=user.id, data={"avatar": file_name})
+        res = await self.users_repository.update_one(
+            id=user.id, data={"avatar": file_name}
+        )
+        logger.info(f"Update user({user.id}) avatar to {file_name}")
         return UserRead.model_validate(res, from_attributes=True)

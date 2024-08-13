@@ -1,4 +1,17 @@
 services:
+  app:
+    build:
+      context: ./backend
+    restart: always
+    ports:
+      - 9999:8000
+    command: [ "docker/app.sh" ]
+    volumes:
+      - ./backend/logs/log_backup:/logs/log_backup
+    depends_on:
+      - pg
+    env_file:
+      - ./backend/.env-n-dev
 
   pg:
     image: postgres
@@ -6,8 +19,21 @@ services:
       POSTGRES_DB: db
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  redis:
+    image: redis:7.2.0
+    container_name: redis
+    restart: always
+    #    command: --port 6379
+    #    expose:
+    #      - 6379
+    ports:
+      - "6379:6379"
 
   pgadmin:
     image: dpage/pgadmin4
@@ -17,3 +43,35 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
       - "5050:80"
+    depends_on:
+      - pg
+
+  celery:
+    build:
+      context: ./backend
+    command: [ "docker/celery.sh", "celery" ]
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
+    depends_on:
+      - redis
+    env_file:
+      - ./backend/.env-n-dev
+
+  flower:
+    build:
+      context: ./backend
+    restart: always
+    command: [ "docker/celery.sh", "flower" ]
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379
+    ports:
+      - 8888:5555
+    depends_on:
+      - celery
+    env_file:
+      - ./backend/.env-n-dev
+
+volumes:
+  app:
+  postgres_data:

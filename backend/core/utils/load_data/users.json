@@ -1,0 +1,30 @@
+[
+    {
+        "username": "bob",
+        "first_name": "Bob",
+        "last_name": "Mayakov",
+        "email": "bob@example.com",
+        "password": "12321323"
+    },
+    {
+        "username": "licaro",
+        "first_name": "Дмитрий",
+        "last_name": "Лишухай",
+        "email": "desp1eroff@gmail.com",
+        "password": "12345678"
+    },
+    {
+        "username": "alina",
+        "first_name": "Alina",
+        "last_name": "Nyalova",
+        "email": "alina@mail.ru",
+        "password": "alina@122"
+    },
+    {
+        "username": "dmitriy",
+        "first_name": "Dmitriy",
+        "last_name": "Pavlov",
+        "email": "dmitril@gmail.com",
+        "password": "dmitrilp"
+    }
+]
