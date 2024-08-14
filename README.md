@@ -9,7 +9,9 @@
 
 
 
-<details><summary style="font-size:20px; font-weight: bold;">Установка и запуск</summary>
+<details>
+
+<summary style="font-size:25px; font-weight: bold;">Установка и запуск</summary>
 
 
 * ##### Клонировать репозиторий:
@@ -79,7 +81,9 @@ docker exec -it tasktracker-app-1 python cli.py load_statuses
 
 ####
 
-<details><summary style="font-size:20px; font-weight: bold;">CLI в проекте</summary>
+<details>
+
+<summary style="font-size:25px; font-weight: bold;">CLI в проекте</summary>
 
 #### Запуск CLI осуществляется через файл cli.py:
 `python cli.py command_name`
