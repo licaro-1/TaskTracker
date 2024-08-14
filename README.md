@@ -1,11 +1,12 @@
+<div style="text-align: center;">
 
-# <p style="text-align: center;">TaskTracker</p>
+<p style="text-align: center; font-size: 28px; font-weight: bold;">TaskTracker</p>
 
 <p style="text-align:center;"><img style="text-align:center;" src="assets/logo.png" alt="logo"/></p>
 
 <p style="text-align: center;">TaskTracker - сервис на FastAPI для создания и сопровождения своих и командных задач.<p>
+</div>
 
----
 
 
 <details><summary style="font-size:20px; font-weight: bold;">Установка и запуск</summary>
@@ -116,6 +117,8 @@ docker exec -it tasktracker-app-1 python cli.py load_statuses
 ### Схемы:
 
 [<img src="/assets/endpoint_schema.png" width="100px" style="border-radius:5px;" alt="api-schema"/>](assets/endpoint_schema.png) [<img src="/assets/db_schema.png" width="141px" style="border-radius:5px;" alt="db-schema"/>](assets/db_schema.png)
+
+#
 
 ## Технологии:
 
