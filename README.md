@@ -1,10 +1,10 @@
-
-<p align="justify" style="text-align: center; font-size: 28px; font-weight: bold;">TaskTracker</p>
+<div align="center">
+<p style="text-align: center; font-size: 28px; font-weight: bold;">TaskTracker</p>
 
 <p style="text-align:center;"><img style="text-align:center;" src="assets/logo.png" alt="logo"/></p>
 
 <p style="text-align: center;">TaskTracker - сервис на FastAPI для создания и сопровождения своих и командных задач.<p>
-
+</div>
 
 
 
