@@ -102,7 +102,7 @@ docker exec -it tasktracker-app-1 python cli.py load_statuses
 
 ## Документация:
 
----
+
 <div align="center">
     <table >
      <tr>
@@ -119,7 +119,7 @@ docker exec -it tasktracker-app-1 python cli.py load_statuses
 
 ## Технологии:
 
----
+
 * Python
   * FastAPI
   * Celery
