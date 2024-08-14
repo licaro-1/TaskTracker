@@ -1,5 +1,6 @@
 <div align="center">
-<p style="text-align: center; font-size: 28px; font-weight: bold;">TaskTracker</p>
+
+# TaskTracker
 
 <p style="text-align:center;"><img style="text-align:center;" src="assets/logo.png" alt="logo"/></p>
 
