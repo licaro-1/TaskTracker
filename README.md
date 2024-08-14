@@ -1,11 +1,12 @@
 
 # <p style="text-align: center;">TaskTracker</p>
 
-<p style="text-align:center;"><img src="assets/logo.png" alt="logo"/></p>
+<p style="text-align:center;"><img style="text-align:center;" src="assets/logo.png" alt="logo"/></p>
 
 <p style="text-align: center;">TaskTracker - сервис на FastAPI для создания и сопровождения своих и командных задач.<p>
 
 ---
+
 
 <details><summary style="font-size:20px; font-weight: bold;">Установка и запуск</summary>
 
@@ -29,10 +30,8 @@ python -m venv venv
 . .\venv\Scripts\activate
 ```
 
-* ##### Создать .env файл и указать необходимые переменные (по примеру .env-example):
-```bash
+* ##### Создать .env файл и указать необходимые переменные (по примеру .env-example)
 
-```
 
 * ##### Создать приватный и публичный ключ:
 
@@ -67,7 +66,7 @@ docker compose up -d
   # Перед запуском убедитесь, что в env файле активна брокер-ссылка для pytest
   pytest tests/
   ```
-  * После успешных тестов вернутся в корень проекта и закоментировать брокер ссылку для pytest в env файле
+  * После успешных тестов вернуться в корень проекта и закоментировать брокер ссылку для pytest в env файле
   ```bash
   cd ..
   ```
@@ -77,6 +76,28 @@ docker exec -it tasktracker-app-1 python cli.py load_statuses
 ```
 </details>
 
+####
+
+<details><summary style="font-size:20px; font-weight: bold;">CLI в проекте</summary>
+
+#### Запуск CLI осуществляется через файл cli.py:
+`python cli.py command_name`
+
+С помощью CLI можно выгружать в базу данных таск-статусы, пользователей, супер-пользователей.
+Выгрузка происходит из раздельных файлов в директории `load_data` (`backend/core/utils/load_data`)
+
+#### Список комманд:
+
+* `load_statuses` - выгрузка статусов из файла
+
+* `load_users` - выгрузка пользователей
+
+* `load_superusers` - выгрузка супер-пользователей
+
+
+> Для добавления какого-либо объекта в выгрузку нужно добавить данные в соответствующий файл
+
+</details>
 
 
 ## Документация:

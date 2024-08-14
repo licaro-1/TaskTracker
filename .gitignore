@@ -168,3 +168,4 @@ backend/authentication/certs/*
 backend/static/user_images/*
 !backend/static/user_images/default_image.png
 backend/logs/log_backup/*
+#backend/.env-n-dev
