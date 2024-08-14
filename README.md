@@ -1,5 +1,5 @@
 
-<p style="text-align: center; align: justify; font-size: 28px; font-weight: bold;">TaskTracker</p>
+<p align="justify" style="text-align: center; font-size: 28px; font-weight: bold;">TaskTracker</p>
 
 <p style="text-align:center;"><img style="text-align:center;" src="assets/logo.png" alt="logo"/></p>
 
