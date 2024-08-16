@@ -4,10 +4,9 @@
 
 <p style="text-align:center;"><img style="text-align:center;" src="assets/logo.png" alt="logo"/></p>
 
-<p style="text-align: center; font-weight: bold;">
-TaskTracker - сервис на FastAPI для создания и сопровождения своих 
-и командных задач с возможностью комментирования, привлечения других пользователей, 
-<p>
+
+#### TaskTracker - сервис на FastAPI для создания и сопровождения своих и командных задач с возможностью комментирования и привлечения других пользователей. 
+
 </div>
 
 
