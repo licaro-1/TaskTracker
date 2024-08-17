@@ -11,7 +11,7 @@ services:
     depends_on:
       - pg
     env_file:
-      - ./backend/.env-n-dev
+      - ./backend/.env
 
   pg:
     image: postgres
@@ -56,7 +56,7 @@ services:
     depends_on:
       - redis
     env_file:
-      - ./backend/.env-n-dev
+      - ./backend/.env
 
   flower:
     build:
@@ -70,7 +70,7 @@ services:
     depends_on:
       - celery
     env_file:
-      - ./backend/.env-n-dev
+      - ./backend/.env
 
 volumes:
   app:
