@@ -1,11 +1,10 @@
 services:
   app:
-    build:
-      context: ./backend
+    image: licaroo/tasktracker:v1.0.2
     restart: always
     ports:
       - 9999:8000
-    command: [ "docker/app.sh" ]
+    command: [ "/backend/docker/app.sh" ]
     volumes:
       - ./backend/logs/log_backup:/logs/log_backup
     depends_on:
@@ -29,9 +28,6 @@ services:
     image: redis:7.2.0
     container_name: redis
     restart: always
-    #    command: --port 6379
-    #    expose:
-    #      - 6379
     ports:
       - "6379:6379"
 
@@ -47,9 +43,8 @@ services:
       - pg
 
   celery:
-    build:
-      context: ./backend
-    command: [ "docker/celery.sh", "celery" ]
+    image: licaroo/tasktracker:v1.0.2
+    command: [ "/backend/docker/celery.sh", "celery" ]
     environment:
       - CELERY_BROKER_URL=redis://redis:6379
       - CELERY_RESULT_BACKEND=redis://redis:6379
@@ -59,10 +54,9 @@ services:
       - ./backend/.env
 
   flower:
-    build:
-      context: ./backend
+    image: licaroo/tasktracker:v1.0.2
     restart: always
-    command: [ "docker/celery.sh", "flower" ]
+    command: [ "/backend/docker/celery.sh", "flower" ]
     environment:
       - CELERY_BROKER_URL=redis://redis:6379
     ports:
