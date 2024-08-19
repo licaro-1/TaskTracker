@@ -18,7 +18,7 @@
 
 * ##### Клонировать репозиторий:
 ```bash
-git clone git@github.com:licaro-1/TaskTracker.git
+git clone https://github.com/licaro-1/TaskTracker.git
 ```
 
 
